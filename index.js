@@ -35,7 +35,11 @@ app.post("/generate", (req, res) => {
     createdAt: new Date().toISOString()
   });
 
-  console.log("New Job:", jobId);
+  console.log({
+    success: true,
+    jobId,
+    status: "queued"
+  });
 
   res.json({
     success: true,
