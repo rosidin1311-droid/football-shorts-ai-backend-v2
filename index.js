@@ -3,6 +3,7 @@ import express from "express";
 import cors from "cors";
 
 const app = express();
+const jobs = new Map();
 const PORT = process.env.PORT || 3000;
 
 app.use(cors());
@@ -27,14 +28,33 @@ app.post("/generate", (req, res) => {
 
   const jobId = crypto.randomUUID();
 
+  jobs.set(jobId, {
+    id: jobId,
+    url,
+    status: "queued",
+    createdAt: new Date().toISOString()
+  });
+
   console.log("New Job:", jobId);
 
   res.json({
     success: true,
     jobId,
-    status: "queued",
-    receivedUrl: url
+    status: "queued"
   });
+});
+
+app.get("/job/:jobId", (req, res) => {
+  const job = jobs.get(req.params.jobId);
+
+  if (!job) {
+    return res.status(404).json({
+      success: false,
+      message: "Job tidak ditemukan"
+    });
+  }
+
+  res.json(job);
 });
 
 app.listen(PORT, "0.0.0.0", () => {
