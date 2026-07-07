@@ -1,3 +1,4 @@
+import crypto from "crypto";
 import express from "express";
 import cors from "cors";
 
@@ -24,9 +25,14 @@ app.post("/generate", (req, res) => {
     });
   }
 
+  const jobId = crypto.randomUUID();
+
+  console.log("New Job:", jobId);
+
   res.json({
     success: true,
-    status: "processing",
+    jobId,
+    status: "queued",
     receivedUrl: url
   });
 });
